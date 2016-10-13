@@ -1,0 +1,47 @@
+{
+	"odata.metadata": "https://api.datamarket.azure.com/data.ashx/aml_labs/anomalydetection/v2/$metadata#AnomalyDetection.FrontEndService.Models.AnomalyDetectionResult",
+	"ADOutput": {
+		"ColumnNames": [
+			"Time",
+			"Data",
+			"TSpike",
+			"ZSpike",
+			"rpscore",
+			"rpalert",
+			"tscore",
+			"talert"
+		],
+		"ColumnTypes": [
+			"DateTime",
+			"Double",
+			"Double",
+			"Double",
+			"Double",
+			"Int32",
+			"Double",
+			"Int32"
+		],
+		"Values": [
+			[
+				"9/21/201411:10:00AM",
+				"9.09",
+				"0",
+				"0",
+				"-1.07030497733224",
+				"0",
+				"-0.884548154298423",
+				"0"
+			],
+			[
+				"9/21/201411:15:00AM",
+				"0",
+				"0",
+				"0",
+				"-1.05186237440962",
+				"0",
+				"-1.173800281031",
+				"0"
+			]
+		]
+	}
+}
