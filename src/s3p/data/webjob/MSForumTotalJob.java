@@ -31,7 +31,7 @@ public class MSForumTotalJob {
 			MSForumHourly.run(raw, cur, hourly);
 			// Daily
 			if ("23".equals(cur.format("hh"))) {
-				MSForumDaily.run(hourly, cur, daily);
+				MSForumDaily.run(platform, hourly, cur, daily);
 				// Weekly
 				if (start.numDaysFrom(cur) >= 6) {
 					MSForumWeekly.run(platform, daily, cur, start, weekly);

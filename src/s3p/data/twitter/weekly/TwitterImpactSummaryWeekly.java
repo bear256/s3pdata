@@ -244,17 +244,30 @@ public class TwitterImpactSummaryWeekly {
 	}
 
 	private RegionOfUsers genRegionOfUsers(String platform, String topic, DateTime dt) {
+		final int THRESHOLD = 50;
 		String tableName = Platform.getWeeklyTableName(platform);
 		// objectcountthistime
 		List<DocEntity> regions = TableUtils.filterDocs(tableName, dt.format("YYYY-MM-DD"),
 				String.format("%s-%s-%s:0", Endpoint.REGIONDISTRIBUTION, topic, "ALL"),
 				String.format("%s-%s-%s:z", Endpoint.REGIONDISTRIBUTION, topic, "ALL"));
-		int objectcountthistime = regions.size();
+		int objectcountthistime = 0;
+		for(DocEntity doc: regions) {
+			RegionDistribution regionDistribution = JSON.parseObject(doc.getJson(), RegionDistribution.class);
+			if(regionDistribution.getVocinfluence().getVoctotalvol() >= THRESHOLD) {
+				objectcountthistime++;
+			}
+		}
 		// objectcountlasttime
 		List<DocEntity> lastRegions = TableUtils.filterDocs(tableName, dt.minusDays(7).format("YYYY-MM-DD"),
 				String.format("%s-%s-%s:0", Endpoint.REGIONDISTRIBUTION, topic, "ALL"),
 				String.format("%s-%s-%s:z", Endpoint.REGIONDISTRIBUTION, topic, "ALL"));
-		int objectcountlasttime = lastRegions.size();
+		int objectcountlasttime = 0;
+		for(DocEntity doc: lastRegions) {
+			RegionDistribution regionDistribution = JSON.parseObject(doc.getJson(), RegionDistribution.class);
+			if(regionDistribution.getVocinfluence().getVoctotalvol() >= THRESHOLD) {
+				objectcountlasttime++;
+			}
+		}
 		// comparedratio
 		double comparedratio = 1.0 * (objectcountthistime - objectcountlasttime)
 				/ (objectcountlasttime != 0 ? objectcountlasttime : 1);

@@ -31,7 +31,7 @@ public class TwitterTotalJob {
 			TwitterHourly.run(raw, cur, hourly);
 			// Daily
 			if ("23".equals(cur.format("hh"))) {
-				TwitterDaily.run(hourly, cur, daily);
+				TwitterDaily.run(platform, hourly, cur, daily);
 				// Weekly
 				if (start.numDaysFrom(cur) >= 6) {
 					TwitterWeekly.run(platform, daily, cur, start, weekly);

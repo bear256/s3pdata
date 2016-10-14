@@ -8,17 +8,18 @@ import java.util.Map;
 import hirondelle.date4j.DateTime;
 import s3p.data.storage.table.DocEntity;
 import s3p.data.twitter.daily.TwitterDailyInfluenceDaily;
-import s3p.data.twitter.daily.TwitterDailyVolSpikeDaily;
-import s3p.data.twitter.daily.TwitterInfluenceVolSpikeDaily;
+//import s3p.data.twitter.daily.TwitterDailyVolSpikeDaily;
+//import s3p.data.twitter.daily.TwitterInfluenceVolSpikeDaily;
 import s3p.data.twitter.daily.TwitterKeywordsMentionedMostMappingDaily;
 import s3p.data.twitter.daily.TwitterMentionedMostServiceListByUserVolDaily;
 import s3p.data.twitter.daily.TwitterMentionedMostServiceListDaily;
-import s3p.data.twitter.daily.TwitterMessageVolSpikeDaily;
+//import s3p.data.twitter.daily.TwitterMessageVolSpikeDaily;
 import s3p.data.twitter.daily.TwitterPNDistributionDaily;
 import s3p.data.twitter.daily.TwitterRegionDistributionDaily;
 import s3p.data.twitter.daily.TwitterTopUserDaily;
-import s3p.data.twitter.daily.TwitterUserRegionVolSpikeDaily;
-import s3p.data.twitter.daily.TwitterUserVolSpikeDaily;
+//import s3p.data.twitter.daily.TwitterUserRegionVolSpikeDaily;
+//import s3p.data.twitter.daily.TwitterUserVolSpikeDaily;
+import s3p.data.twitter.daily.TwitterVolSpikesDaily;
 import s3p.data.utils.TableUtils;
 
 public class TwitterDaily {
@@ -78,7 +79,7 @@ public class TwitterDaily {
 		return map;
 	}
 
-	public static void run(String hourly, DateTime cur, String daily) {
+	public static void run(String platform, String hourly, DateTime cur, String daily) {
 		List<DocEntity> docs = listDocs(hourly, cur.format("YYYY-MM-DD"));
 		Map<String, List<DocEntity>> endpoints = groupByEndpoint(docs);
 		for (String endpoint : endpoints.keySet()) {
@@ -89,7 +90,7 @@ public class TwitterDaily {
 				// PNDistribution
 				TwitterPNDistributionDaily.run(endpoint, listByTopic, daily, cur, topic);
 				// DailyVolSpike
-				TwitterDailyVolSpikeDaily.run(endpoint, listByTopic, daily, cur, topic);
+//				TwitterDailyVolSpikeDaily.run(endpoint, listByTopic, daily, cur, topic);
 				Map<String, List<DocEntity>> pns = groupByPN(listByTopic);
 				for (String pn : pns.keySet()) {
 					List<DocEntity> listByPN = pns.get(pn);
@@ -100,13 +101,13 @@ public class TwitterDaily {
 					// DailyInfluence
 					TwitterDailyInfluenceDaily.run(endpoint, listByPN, daily, cur, topic, pn);
 					// MessageVolSpike
-					TwitterMessageVolSpikeDaily.run(endpoint, listByPN, daily, cur, topic, pn);
+//					TwitterMessageVolSpikeDaily.run(endpoint, listByPN, daily, cur, topic, pn);
 					// InfluenceVolSpike
-					TwitterInfluenceVolSpikeDaily.run(endpoint, listByPN, daily, cur, topic, pn);
+//					TwitterInfluenceVolSpikeDaily.run(endpoint, listByPN, daily, cur, topic, pn);
 					// UserVolSpike
-					TwitterUserVolSpikeDaily.run(endpoint, listByPN, daily, cur, topic, pn);
+//					TwitterUserVolSpikeDaily.run(endpoint, listByPN, daily, cur, topic, pn);
 					// UserRegionVolSpike
-					TwitterUserRegionVolSpikeDaily.run(endpoint, listByPN, daily, cur, topic, pn);
+//					TwitterUserRegionVolSpikeDaily.run(endpoint, listByPN, daily, cur, topic, pn);
 					// MentionedMostServiceList
 					TwitterMentionedMostServiceListDaily.run(endpoint, listByPN, daily, cur, topic, pn);
 					// MentionedMostServiceListByUserVol
@@ -116,6 +117,8 @@ public class TwitterDaily {
 				}
 			}
 		}
+		// TwitterVolSpikesDaily
+		TwitterVolSpikesDaily.run(platform, cur);
 	}
 
 }

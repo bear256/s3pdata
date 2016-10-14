@@ -7,15 +7,16 @@ import java.util.Map;
 
 import hirondelle.date4j.DateTime;
 import s3p.data.stackforum.daily.StackForumDailyInfluenceDaily;
-import s3p.data.stackforum.daily.StackForumDailyVolSpikeDaily;
-import s3p.data.stackforum.daily.StackForumInfluenceVolSpikeDaily;
+//import s3p.data.stackforum.daily.StackForumDailyVolSpikeDaily;
+//import s3p.data.stackforum.daily.StackForumInfluenceVolSpikeDaily;
 import s3p.data.stackforum.daily.StackForumKeywordsMentionedMostMappingDaily;
 import s3p.data.stackforum.daily.StackForumMentionedMostServiceListByUserVolDaily;
 import s3p.data.stackforum.daily.StackForumMentionedMostServiceListDaily;
-import s3p.data.stackforum.daily.StackForumMessageVolSpikeDaily;
+//import s3p.data.stackforum.daily.StackForumMessageVolSpikeDaily;
 import s3p.data.stackforum.daily.StackForumPNDistributionDaily;
 import s3p.data.stackforum.daily.StackForumTopUserDaily;
-import s3p.data.stackforum.daily.StackForumUserVolSpikeDaily;
+//import s3p.data.stackforum.daily.StackForumUserVolSpikeDaily;
+import s3p.data.stackforum.daily.StackForumVolSpikesDaily;
 import s3p.data.storage.table.DocEntity;
 import s3p.data.utils.TableUtils;
 
@@ -76,7 +77,7 @@ public class StackForumDaily {
 		return map;
 	}
 
-	public static void run(String hourly, DateTime cur, String daily) {
+	public static void run(String platform, String hourly, DateTime cur, String daily) {
 		List<DocEntity> docs = listDocs(hourly, cur.format("YYYY-MM-DD"));
 		Map<String, List<DocEntity>> endpoints = groupByEndpoint(docs);
 		for (String endpoint : endpoints.keySet()) {
@@ -87,7 +88,7 @@ public class StackForumDaily {
 				// PNDistribution
 				StackForumPNDistributionDaily.run(endpoint, listByTopic, daily, cur, topic);
 				// DailyVolSpike
-				StackForumDailyVolSpikeDaily.run(endpoint, listByTopic, daily, cur, topic);
+//				StackForumDailyVolSpikeDaily.run(endpoint, listByTopic, daily, cur, topic);
 				Map<String, List<DocEntity>> pns = groupByPN(listByTopic);
 				for (String pn : pns.keySet()) {
 					List<DocEntity> listByPN = pns.get(pn);
@@ -97,11 +98,11 @@ public class StackForumDaily {
 					// DailyInfluence
 					StackForumDailyInfluenceDaily.run(endpoint, listByPN, daily, cur, topic, pn);
 					// MessageVolSpike
-					StackForumMessageVolSpikeDaily.run(endpoint, listByPN, daily, cur, topic, pn);
+//					StackForumMessageVolSpikeDaily.run(endpoint, listByPN, daily, cur, topic, pn);
 					// InfluenceVolSpike
-					StackForumInfluenceVolSpikeDaily.run(endpoint, listByPN, daily, cur, topic, pn);
+//					StackForumInfluenceVolSpikeDaily.run(endpoint, listByPN, daily, cur, topic, pn);
 					// UserVolSpike
-					StackForumUserVolSpikeDaily.run(endpoint, listByPN, daily, cur, topic, pn);
+//					StackForumUserVolSpikeDaily.run(endpoint, listByPN, daily, cur, topic, pn);
 					// UserRegionVolSpike
 					// MentionedMostServiceList
 					StackForumMentionedMostServiceListDaily.run(endpoint, listByPN, daily, cur, topic, pn);
@@ -112,6 +113,8 @@ public class StackForumDaily {
 				}
 			}
 		}
+		// StackForumVolSpikesDaily
+		StackForumVolSpikesDaily.run(platform, cur);
 	}
 
 }

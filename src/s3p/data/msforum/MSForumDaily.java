@@ -7,15 +7,16 @@ import java.util.Map;
 
 import hirondelle.date4j.DateTime;
 import s3p.data.msforum.daily.MSForumDailyInfluenceDaily;
-import s3p.data.msforum.daily.MSForumDailyVolSpikeDaily;
-import s3p.data.msforum.daily.MSForumInfluenceVolSpikeDaily;
+//import s3p.data.msforum.daily.MSForumDailyVolSpikeDaily;
+//import s3p.data.msforum.daily.MSForumInfluenceVolSpikeDaily;
 import s3p.data.msforum.daily.MSForumKeywordsMentionedMostMappingDaily;
 import s3p.data.msforum.daily.MSForumMentionedMostServiceListByUserVolDaily;
 import s3p.data.msforum.daily.MSForumMentionedMostServiceListDaily;
-import s3p.data.msforum.daily.MSForumMessageVolSpikeDaily;
+//import s3p.data.msforum.daily.MSForumMessageVolSpikeDaily;
 import s3p.data.msforum.daily.MSForumPNDistributionDaily;
 import s3p.data.msforum.daily.MSForumTopUserDaily;
-import s3p.data.msforum.daily.MSForumUserVolSpikeDaily;
+//import s3p.data.msforum.daily.MSForumUserVolSpikeDaily;
+import s3p.data.msforum.daily.MSForumVolSpikesDaily;
 import s3p.data.storage.table.DocEntity;
 import s3p.data.utils.TableUtils;
 
@@ -76,7 +77,7 @@ public class MSForumDaily {
 		return map;
 	}
 
-	public static void run(String hourly, DateTime cur, String daily) {
+	public static void run(String platform, String hourly, DateTime cur, String daily) {
 		List<DocEntity> docs = listDocs(hourly, cur.format("YYYY-MM-DD"));
 		Map<String, List<DocEntity>> endpoints = groupByEndpoint(docs);
 		for (String endpoint : endpoints.keySet()) {
@@ -87,7 +88,7 @@ public class MSForumDaily {
 				// PNDistribution
 				MSForumPNDistributionDaily.run(endpoint, listByTopic, daily, cur, topic);
 				// DailyVolSpike
-				MSForumDailyVolSpikeDaily.run(endpoint, listByTopic, daily, cur, topic);
+//				MSForumDailyVolSpikeDaily.run(endpoint, listByTopic, daily, cur, topic);
 				Map<String, List<DocEntity>> pns = groupByPN(listByTopic);
 				for (String pn : pns.keySet()) {
 					List<DocEntity> listByPN = pns.get(pn);
@@ -97,11 +98,11 @@ public class MSForumDaily {
 					// DailyInfluence
 					MSForumDailyInfluenceDaily.run(endpoint, listByPN, daily, cur, topic, pn);
 					// MessageVolSpike
-					MSForumMessageVolSpikeDaily.run(endpoint, listByPN, daily, cur, topic, pn);
+//					MSForumMessageVolSpikeDaily.run(endpoint, listByPN, daily, cur, topic, pn);
 					// InfluenceVolSpike
-					MSForumInfluenceVolSpikeDaily.run(endpoint, listByPN, daily, cur, topic, pn);
+//					MSForumInfluenceVolSpikeDaily.run(endpoint, listByPN, daily, cur, topic, pn);
 					// UserVolSpike
-					MSForumUserVolSpikeDaily.run(endpoint, listByPN, daily, cur, topic, pn);
+//					MSForumUserVolSpikeDaily.run(endpoint, listByPN, daily, cur, topic, pn);
 					// UserRegionVolSpike
 					// MentionedMostServiceList
 					MSForumMentionedMostServiceListDaily.run(endpoint, listByPN, daily, cur, topic, pn);
@@ -112,6 +113,8 @@ public class MSForumDaily {
 				}
 			}
 		}
+		// MSForumVolSpikesDaily
+		MSForumVolSpikesDaily.run(platform, cur);
 	}
 
 }

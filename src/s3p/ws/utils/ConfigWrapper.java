@@ -21,6 +21,13 @@ public class ConfigWrapper {
 		System.out.println(DateTime.forInstant(1471230900L*1000, TimeZone.getTimeZone("GMT+0")));
 		System.out.println(DateTime.forInstant(1475596800L*1000, TimeZone.getTimeZone("GMT+0")));
 		System.out.println(new DateTime("2016-10-01").getMilliseconds(TimeZone.getTimeZone("GMT+0")));
+		DateTime now = DateTime.now(TimeZone.getTimeZone("GMT+0"));
+		System.out.println("NOW: "+now);
+		DateTime start = now.minusDays(30);
+		DateTime end = now;
+		for (DateTime cur = start; cur.lteq(end); cur = cur.plusDays(1)) {
+			System.out.println("CUR: "+cur);
+		}
 	}
 
 }
