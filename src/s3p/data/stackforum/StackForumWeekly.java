@@ -149,7 +149,6 @@ public class StackForumWeekly {
 		if (start.numDaysFrom(dt) >= 13)
 			for (String topic : topics) {
 				new MSForumImpactSummaryWeekly().gen(platform, topic, dt).save(weekly, dt, topic, "ALL");
-				;
 			}
 	}
 

@@ -8,6 +8,8 @@ public class MostDislikedService {
 
 	public MostDislikedService() {
 		super();
+		this.mentionedmostservice = new MentionedMostService();
+		this.occupyratio = 0;
 	}
 
 	public MostDislikedService(MentionedMostService mentionedmostservice, Integer occupyratio) {

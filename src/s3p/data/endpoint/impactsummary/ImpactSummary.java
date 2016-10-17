@@ -16,7 +16,15 @@ public class ImpactSummary {
 
 	public ImpactSummary() {
 		super();
-		// TODO Auto-generated constructor stub
+		this.influenceofusers = new InfluenceOfUsers();
+		this.joinedusers = new JoinedUsers();
+		this.mentionedservicecount = new MentionedServiceCount();
+		this.mostdislikedservice = new MostDislikedService[0];
+		this.mostlikedservice = new MostLikedService[0];
+		this.mostnegfrom = new RegionDistribution();
+		this.mostposifrom = new RegionDistribution();
+		this.regionofusers = new RegionOfUsers();
+		this.vocinsights = new VocInsights();
 	}
 
 	public ImpactSummary(InfluenceOfUsers influenceofusers, JoinedUsers joinedusers,

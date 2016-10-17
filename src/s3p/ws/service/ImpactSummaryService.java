@@ -28,35 +28,42 @@ public class ImpactSummaryService {
 		String rowKey2 = String.format("%s-%s-%s", ENDPOINT, topic, "ALL");
 		List<DocEntity> docs = TableUtils.filterDocs(tableName, partitionKey, rowKey1, rowKey2);
 		System.out.println(partitionKey + "-" + rowKey1 + "-" + rowKey2 + ":" + docs.size());
-		ImpactSummary impactSummary = JSON.parseObject(docs.get(0).getJson(), ImpactSummary.class);
-		MostDislikedService[] dislikes = impactSummary.getMostdislikedservice();
-		System.out.println(JSON.toJSONString(dislikes));
-		for (MostDislikedService service : dislikes) {
-			if(service == null) continue;
-			String sn = service.getMentionedmostservice().getAttachedobject();
-			List<DocEntity> lastDocs = TableUtils.filterDocs(tableName, now.minusDays(7).format("YYYY-MM-DD"),
-					String.format("%s-%s-%s:%s", Endpoint.MENTIONEDMOSTSERVICELIST, topic, Sentiment.NEG, sn),
-					String.format("%s-%s-%s:%s", Endpoint.MENTIONEDMOSTSERVICELIST, topic, Sentiment.NEG, sn));
-			int voclasttimetotalvolume = 0;
-			if (!lastDocs.isEmpty()) {
-				voclasttimetotalvolume = JSON.parseObject(lastDocs.get(0).getJson(), MentionedMostService.class)
-						.getVocinfluence().getVoctotalvol();
+		ImpactSummary impactSummary = null;
+		if (!docs.isEmpty()) {
+			impactSummary = JSON.parseObject(docs.get(0).getJson(), ImpactSummary.class);
+			MostDislikedService[] dislikes = impactSummary.getMostdislikedservice();
+			System.out.println(JSON.toJSONString(dislikes));
+			for (MostDislikedService service : dislikes) {
+				if (service == null)
+					continue;
+				String sn = service.getMentionedmostservice().getAttachedobject();
+				List<DocEntity> lastDocs = TableUtils.filterDocs(tableName, now.minusDays(7).format("YYYY-MM-DD"),
+						String.format("%s-%s-%s:%s", Endpoint.MENTIONEDMOSTSERVICELIST, topic, Sentiment.NEG, sn),
+						String.format("%s-%s-%s:%s", Endpoint.MENTIONEDMOSTSERVICELIST, topic, Sentiment.NEG, sn));
+				int voclasttimetotalvolume = 0;
+				if (!lastDocs.isEmpty()) {
+					voclasttimetotalvolume = JSON.parseObject(lastDocs.get(0).getJson(), MentionedMostService.class)
+							.getVocinfluence().getVoctotalvol();
+				}
+				service.getMentionedmostservice().getVocinfluence().setVoclasttimetotalvolume(voclasttimetotalvolume);
 			}
-			service.getMentionedmostservice().getVocinfluence().setVoclasttimetotalvolume(voclasttimetotalvolume);
-		}
-		MostLikedService[] likes = impactSummary.getMostlikedservice();
-		for (MostLikedService service : likes) {
-			if(service == null) continue;
-			String sn = service.getMentionedmostservice().getAttachedobject();
-			List<DocEntity> lastDocs = TableUtils.filterDocs(tableName, now.minusDays(7).format("YYYY-MM-DD"),
-					String.format("%s-%s-%s:%s", Endpoint.MENTIONEDMOSTSERVICELIST, topic, Sentiment.POSI, sn),
-					String.format("%s-%s-%s:%s", Endpoint.MENTIONEDMOSTSERVICELIST, topic, Sentiment.POSI, sn));
-			int voclasttimetotalvolume = 0;
-			if (!lastDocs.isEmpty()) {
-				voclasttimetotalvolume = JSON.parseObject(lastDocs.get(0).getJson(), MentionedMostService.class)
-						.getVocinfluence().getVoctotalvol();
+			MostLikedService[] likes = impactSummary.getMostlikedservice();
+			for (MostLikedService service : likes) {
+				if (service == null)
+					continue;
+				String sn = service.getMentionedmostservice().getAttachedobject();
+				List<DocEntity> lastDocs = TableUtils.filterDocs(tableName, now.minusDays(7).format("YYYY-MM-DD"),
+						String.format("%s-%s-%s:%s", Endpoint.MENTIONEDMOSTSERVICELIST, topic, Sentiment.POSI, sn),
+						String.format("%s-%s-%s:%s", Endpoint.MENTIONEDMOSTSERVICELIST, topic, Sentiment.POSI, sn));
+				int voclasttimetotalvolume = 0;
+				if (!lastDocs.isEmpty()) {
+					voclasttimetotalvolume = JSON.parseObject(lastDocs.get(0).getJson(), MentionedMostService.class)
+							.getVocinfluence().getVoctotalvol();
+				}
+				service.getMentionedmostservice().getVocinfluence().setVoclasttimetotalvolume(voclasttimetotalvolume);
 			}
-			service.getMentionedmostservice().getVocinfluence().setVoclasttimetotalvolume(voclasttimetotalvolume);
+		} else{
+			impactSummary = new ImpactSummary();
 		}
 		return JSON.toJSONString(impactSummary);
 	}
