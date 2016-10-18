@@ -179,7 +179,7 @@ public class TwitterImpactSummaryWeekly {
 		int total = 0;
 		for (DocEntity doc : docs) {
 			MentionedMostService posi = JSON.parseObject(doc.getJson(), MentionedMostService.class);
-			total += posi.getVocinfluence().getNegativetotalvol();
+			total += posi.getVocinfluence().getPositivetotalvol();
 			posis.add(posi);
 		}
 		Collections.sort(posis, new Comparator<MentionedMostService>() {
@@ -193,7 +193,7 @@ public class TwitterImpactSummaryWeekly {
 		MostLikedService[] list = new MostLikedService[3];
 		for (int i = 0; i < posis.size() && i < 3; i++) {
 			MentionedMostService posi = posis.get(i);
-			int occupyratio = posi.getVocinfluence().getNegativetotalvol() * 100 / (total != 0 ? total : 1);
+			int occupyratio = posi.getVocinfluence().getPositivetotalvol() * 100 / (total != 0 ? total : 1);
 			list[i] = new MostLikedService(posi, occupyratio);
 		}
 		return list;
