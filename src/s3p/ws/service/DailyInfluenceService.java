@@ -23,7 +23,12 @@ public class DailyInfluenceService {
 		String rowKey2 = String.format("%s-%s-%s", ENDPOINT, topic, pnScope);
 		List<DocEntity> docs = TableUtils.filterDocs(tableName, partitionKey, rowKey1, rowKey2);
 		System.out.println(partitionKey+"-"+rowKey1+"-"+rowKey2+":"+docs.size());
-		DailyInfluence[] dailyInfluences = JSON.parseObject(docs.get(0).getJson(), DailyInfluence[].class);
+		DailyInfluence[] dailyInfluences = null;
+		if(docs != null && !docs.isEmpty()) {
+			dailyInfluences = JSON.parseObject(docs.get(0).getJson(), DailyInfluence[].class);
+		} else {
+			dailyInfluences = new DailyInfluence[]{};
+		}
 		return JSON.toJSONString(dailyInfluences);
 	}
 

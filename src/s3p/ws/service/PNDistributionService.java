@@ -14,7 +14,7 @@ import s3p.data.utils.TableUtils;
 import s3p.ws.config.Platform;
 
 public class PNDistributionService {
-	
+
 	private static final String ENDPOINT = Endpoint.PNDISTRIBUTION;
 
 	public String get(String platform, String topic) {
@@ -24,8 +24,12 @@ public class PNDistributionService {
 		String rowKey2 = String.format("%s-%s-%s", ENDPOINT, topic, "ALL");
 		List<DocEntity> docs = TableUtils.filterDocs(tableName, partitionKey, rowKey1, rowKey2);
 		List<VocInfluence> pndistributions = new ArrayList<>();
-		for (DocEntity doc : docs) {
-			pndistributions.add(JSON.parseObject(doc.getJson(), VocInfluence.class));
+		if (docs != null && !docs.isEmpty()) {
+			for (DocEntity doc : docs) {
+				pndistributions.add(JSON.parseObject(doc.getJson(), VocInfluence.class));
+			}
+		} else {
+			pndistributions.add(new VocInfluence());
 		}
 		return JSON.toJSONString(pndistributions.get(0));
 	}
