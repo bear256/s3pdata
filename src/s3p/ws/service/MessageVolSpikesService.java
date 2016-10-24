@@ -19,7 +19,8 @@ public class MessageVolSpikesService {
 
 	public String get(String platform, String topic, String pnScope, int days) {
 		String tableName = Platform.getWeeklyTableName(platform);
-		String partitionKey = DateTime.now(TimeZone.getTimeZone("GMT+0")).minusDays(1).format("YYYY-MM-DD");
+		//String partitionKey = DateTime.now(TimeZone.getTimeZone("GMT+0")).minusDays(1).format("YYYY-MM-DD");
+		String partitionKey = new DateTime("2016-10-18").minusDays(1).format("YYYY-MM-DD");
 		String rowKey1 = String.format("%s-%s-%s:0", ENDPOINT, topic, pnScope);
 		String rowKey2 = String.format("%s-%s-%s:z", ENDPOINT, topic, pnScope);
 		List<DocEntity> docs = TableUtils.filterDocs(tableName, partitionKey, rowKey1, rowKey2);

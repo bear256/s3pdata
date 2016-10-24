@@ -10,6 +10,7 @@ import java.util.TimeZone;
 import com.alibaba.fastjson.JSON;
 
 import hirondelle.date4j.DateTime;
+import s3p.data.config.S3PDataConfig;
 import s3p.data.endpoint.common.Endpoint;
 import s3p.data.endpoint.common.Sentiment;
 import s3p.data.endpoint.dailyvolspikes.DailyVolSpike;
@@ -62,7 +63,9 @@ public class MSForumVolSpikesDaily {
 		return map;
 	}
 
-	public static void detect4DailyVolSpike(List<DocEntity> listByPN, String tableName, String endpoint, String topic, String pn) {
+	public static void detect4DailyVolSpike(List<DocEntity> listByPN, String platform, String endpoint, String topic,
+			String pn) {
+		String tableName = Platform.getDailyTableName(platform);
 		List<DailyVolSpike> list = new ArrayList<DailyVolSpike>();
 		List<String[]> undef = new ArrayList<>();
 		List<String[]> undefinfluence = new ArrayList<>();
@@ -81,6 +84,8 @@ public class MSForumVolSpikesDaily {
 			list.add(volSpike);
 			long timeslot = volSpike.getDailytimeslot();
 			DateTime cur = DateTime.forInstant(timeslot * 1000, TimeZone.getTimeZone("GMT+0"));
+			if (cur.format("YYYY-MM-DD").equals("2016-10-14"))
+				System.out.println(JSON.toJSONString(volSpike));
 			String time = cur.format("M/D/YYYY h12:00:00 a", Locale.US);
 			undef.add(new String[] { time, "" + volSpike.getDailyundefvol() });
 			undefinfluence.add(new String[] { time, "" + volSpike.getDailyundefinfluencevol() });
@@ -164,13 +169,15 @@ public class MSForumVolSpikesDaily {
 			long timeslot = volSpike.getDailytimeslot();
 			DateTime cur = DateTime.forInstant(timeslot * 1000, TimeZone.getTimeZone("GMT+0"));
 			String ymd = cur.format("YYYY-MM-DD");
+			if (ymd.equals("2016-10-14"))
+				System.out.println(JSON.toJSONString(volSpike));
 			if (!map.containsKey(ymd)) {
 				map.put(ymd, volSpike);
 			} else {
 				map.get(ymd).merge(volSpike);
 			}
 		}
-		for(String partitionKey: map.keySet()) {
+		for (String partitionKey : map.keySet()) {
 			DailyVolSpike dailyVolSpike = map.get(partitionKey);
 			String rowKey = String.format("%s-%s-%s", endpoint, topic.toUpperCase(), "ALL");
 			String json = JSON.toJSONString(dailyVolSpike);
@@ -179,8 +186,9 @@ public class MSForumVolSpikesDaily {
 		}
 	}
 
-	public static void detect4UserVolSpike(List<DocEntity> listByPN, String tableName, String endpoint, String topic,
+	public static void detect4UserVolSpike(List<DocEntity> listByPN, String platform, String endpoint, String topic,
 			String pn) {
+		String tableName = Platform.getDailyTableName(platform);
 		List<UserVolSpike> list = new ArrayList<UserVolSpike>();
 		List<String[]> data = new ArrayList<>();
 		List<String> times = new ArrayList<>();
@@ -213,8 +221,9 @@ public class MSForumVolSpikesDaily {
 		}
 	}
 
-	public static void detect4MessageVolSpike(List<DocEntity> listByPN, String tableName, String endpoint, String topic,
+	public static void detect4MessageVolSpike(List<DocEntity> listByPN, String platform, String endpoint, String topic,
 			String pn) {
+		String tableName = Platform.getDailyTableName(platform);
 		List<MessageVolSpike> list = new ArrayList<MessageVolSpike>();
 		List<String[]> data = new ArrayList<>();
 		List<String> times = new ArrayList<>();
@@ -260,11 +269,13 @@ public class MSForumVolSpikesDaily {
 			String json = JSON.toJSONString(messageVolSpike);
 			DocEntity entity = new DocEntity(partitionKey, rowKey, json);
 			TableUtils.writeEntity(tableName, entity);
+
 		}
 	}
 
-	public static void detect4InfluenceVolSpike(List<DocEntity> listByPN, String tableName, String endpoint,
+	public static void detect4InfluenceVolSpike(List<DocEntity> listByPN, String platform, String endpoint,
 			String topic, String pn) {
+		String tableName = Platform.getDailyTableName(platform);
 		List<InfluenceVolSpike> list = new ArrayList<InfluenceVolSpike>();
 		List<String[]> data = new ArrayList<>();
 		List<String> times = new ArrayList<>();
@@ -313,8 +324,9 @@ public class MSForumVolSpikesDaily {
 		}
 	}
 
-	public static void detect4UserRegionVolSpike(List<DocEntity> listByPN, String tableName, String endpoint,
+	public static void detect4UserRegionVolSpike(List<DocEntity> listByPN, String platform, String endpoint,
 			String topic, String pn) {
+		String tableName = Platform.getDailyTableName(platform);
 		List<UserRegionVolSpike> list = new ArrayList<UserRegionVolSpike>();
 		List<String[]> data = new ArrayList<>();
 		List<String> times = new ArrayList<>();
@@ -350,7 +362,7 @@ public class MSForumVolSpikesDaily {
 	public static void run(String platform, DateTime now) {
 		String tableName = Platform.getHourlyTableName(platform);
 		System.out.println(tableName);
-//		DateTime now = DateTime.now(TimeZone.getTimeZone("GMT+0"));
+		// DateTime now = DateTime.now(TimeZone.getTimeZone("GMT+0"));
 		DateTime start = now.minusDays(30);
 		DateTime end = now;
 		for (String endpoint : ENDPOINTS) {
@@ -384,24 +396,31 @@ public class MSForumVolSpikesDaily {
 				List<DocEntity> listByPN = map.get(endpointTopicPN);
 				switch (endpoint) {
 				case Endpoint.DAILYVOLSPIKE:
-					detect4DailyVolSpike(listByPN, tableName, endpoint, topic, pn);
+					detect4DailyVolSpike(listByPN, platform, endpoint, topic, pn);
 					break;
 				case Endpoint.USERVOLSPIKE:
-					detect4UserVolSpike(listByPN, tableName, endpoint, topic, pn);
+					detect4UserVolSpike(listByPN, platform, endpoint, topic, pn);
 					break;
 				case Endpoint.MESSAGEVOLSPIKE:
-					detect4MessageVolSpike(listByPN, tableName, endpoint, topic, pn);
+					detect4MessageVolSpike(listByPN, platform, endpoint, topic, pn);
 					break;
 				case Endpoint.INFLUENCEVOLSPIKE:
-					detect4InfluenceVolSpike(listByPN, tableName, endpoint, topic, pn);
+					detect4InfluenceVolSpike(listByPN, platform, endpoint, topic, pn);
 					break;
 				case Endpoint.USERREGIONVOLSPIKE:
-					detect4UserRegionVolSpike(listByPN, tableName, endpoint, topic, pn);
+					detect4UserRegionVolSpike(listByPN, platform, endpoint, topic, pn);
 					break;
 				}
 			}
 		}
 
+	}
+
+	public static void main(String[] args) {
+		S3PDataConfig config = new S3PDataConfig();
+		TableUtils.init(config);
+		AnomalyDetectionUtils.init(config);
+		run("msdn", new DateTime("2016-10-14"));
 	}
 
 }

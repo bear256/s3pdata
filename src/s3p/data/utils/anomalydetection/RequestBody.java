@@ -25,9 +25,9 @@ public class RequestBody {
 		params = new HashMap<String, String>();
 		params.put("tspikedetector.sensitivity", "3");
 		params.put("zspikedetector.sensitivity", "3");
-		params.put("trenddetector.sensitivity", "3.25");
-		params.put("bileveldetector.sensitivity", "3.25");
-		params.put("postprocess.tailRows", "2");
+		params.put("trenddetector.sensitivity", "3");
+		params.put("bileveldetector.sensitivity", "3");
+		params.put("postprocess.tailRows", ""+data.size());
 	}
 
 	public List<String[]> getData() {

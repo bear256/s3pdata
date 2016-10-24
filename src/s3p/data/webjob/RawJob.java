@@ -44,7 +44,7 @@ public class RawJob {
 		String dcLink = dc.getSelfLink();
 		JobEntity job = TableUtils.readJob(jobName);
 		String last = job.getLast();
-		DateTime cur = new DateTime(last);
+		DateTime cur = new DateTime(last).minusDays(1);
 		DateTime end = DateTime.now(tz);
 		/*
 		 * 

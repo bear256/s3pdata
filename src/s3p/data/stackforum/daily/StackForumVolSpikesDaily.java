@@ -62,7 +62,8 @@ public class StackForumVolSpikesDaily {
 		return map;
 	}
 
-	public static void detect4DailyVolSpike(List<DocEntity> listByPN, String tableName, String endpoint, String topic, String pn) {
+	public static void detect4DailyVolSpike(List<DocEntity> listByPN, String platform, String endpoint, String topic, String pn) {
+		String tableName = Platform.getDailyTableName(platform);
 		List<DailyVolSpike> list = new ArrayList<DailyVolSpike>();
 		List<String[]> undef = new ArrayList<>();
 		List<String[]> undefinfluence = new ArrayList<>();
@@ -179,8 +180,9 @@ public class StackForumVolSpikesDaily {
 		}
 	}
 
-	public static void detect4UserVolSpike(List<DocEntity> listByPN, String tableName, String endpoint, String topic,
+	public static void detect4UserVolSpike(List<DocEntity> listByPN, String platform, String endpoint, String topic,
 			String pn) {
+		String tableName = Platform.getDailyTableName(platform);
 		List<UserVolSpike> list = new ArrayList<UserVolSpike>();
 		List<String[]> data = new ArrayList<>();
 		List<String> times = new ArrayList<>();
@@ -213,8 +215,9 @@ public class StackForumVolSpikesDaily {
 		}
 	}
 
-	public static void detect4MessageVolSpike(List<DocEntity> listByPN, String tableName, String endpoint, String topic,
+	public static void detect4MessageVolSpike(List<DocEntity> listByPN, String platform, String endpoint, String topic,
 			String pn) {
+		String tableName = Platform.getDailyTableName(platform);
 		List<MessageVolSpike> list = new ArrayList<MessageVolSpike>();
 		List<String[]> data = new ArrayList<>();
 		List<String> times = new ArrayList<>();
@@ -263,8 +266,9 @@ public class StackForumVolSpikesDaily {
 		}
 	}
 
-	public static void detect4InfluenceVolSpike(List<DocEntity> listByPN, String tableName, String endpoint,
+	public static void detect4InfluenceVolSpike(List<DocEntity> listByPN, String platform, String endpoint,
 			String topic, String pn) {
+		String tableName = Platform.getDailyTableName(platform);
 		List<InfluenceVolSpike> list = new ArrayList<InfluenceVolSpike>();
 		List<String[]> data = new ArrayList<>();
 		List<String> times = new ArrayList<>();
@@ -313,8 +317,9 @@ public class StackForumVolSpikesDaily {
 		}
 	}
 
-	public static void detect4UserRegionVolSpike(List<DocEntity> listByPN, String tableName, String endpoint,
+	public static void detect4UserRegionVolSpike(List<DocEntity> listByPN, String platform, String endpoint,
 			String topic, String pn) {
+		String tableName = Platform.getDailyTableName(platform);
 		List<UserRegionVolSpike> list = new ArrayList<UserRegionVolSpike>();
 		List<String[]> data = new ArrayList<>();
 		List<String> times = new ArrayList<>();
@@ -384,19 +389,19 @@ public class StackForumVolSpikesDaily {
 				List<DocEntity> listByPN = map.get(endpointTopicPN);
 				switch (endpoint) {
 				case Endpoint.DAILYVOLSPIKE:
-					detect4DailyVolSpike(listByPN, tableName, endpoint, topic, pn);
+					detect4DailyVolSpike(listByPN, platform, endpoint, topic, pn);
 					break;
 				case Endpoint.USERVOLSPIKE:
-					detect4UserVolSpike(listByPN, tableName, endpoint, topic, pn);
+					detect4UserVolSpike(listByPN, platform, endpoint, topic, pn);
 					break;
 				case Endpoint.MESSAGEVOLSPIKE:
-					detect4MessageVolSpike(listByPN, tableName, endpoint, topic, pn);
+					detect4MessageVolSpike(listByPN, platform, endpoint, topic, pn);
 					break;
 				case Endpoint.INFLUENCEVOLSPIKE:
-					detect4InfluenceVolSpike(listByPN, tableName, endpoint, topic, pn);
+					detect4InfluenceVolSpike(listByPN, platform, endpoint, topic, pn);
 					break;
 				case Endpoint.USERREGIONVOLSPIKE:
-					detect4UserRegionVolSpike(listByPN, tableName, endpoint, topic, pn);
+					detect4UserRegionVolSpike(listByPN, platform, endpoint, topic, pn);
 					break;
 				}
 			}
