@@ -14,7 +14,8 @@ public class GetVoCDetailsByDate extends Controller {
 		Long date = getParaToLong("date");
 		String pnScope = getPara("PNScope");
 		int days = getParaToInt("days", 7);
-		String json = service.getByDate(platform.toLowerCase(), topic.toUpperCase(), date, pnScope.toUpperCase(), days);
+		String datetype = getPara("datetype", "h");
+		String json = service.getByDate(platform.toLowerCase(), topic.toUpperCase(), date, pnScope.toUpperCase(), days, datetype);
 		renderJson(json);
 	}
 }

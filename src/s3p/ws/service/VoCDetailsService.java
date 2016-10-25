@@ -88,13 +88,22 @@ public class VoCDetailsService {
 		return JSON.toJSONString(list);
 	}
 
-	public String getByDate(String platform, String topic, long date, String pnScope, int days) {
+	public String getByDate(String platform, String topic, long date, String pnScope, int days, String datetype) {
 		String tableName = Platform.getHourlyTableName(platform);
 		DateTime dt = DateTime.forInstant(date * 1000, TimeZone.getTimeZone("GMT+0"));
-		// DateTime dt = new DateTime("2016-09-03 22:00:00");
 		String partitionKey = dt.format("YYYY-MM-DD");
 		String rowKey1 = String.format("%s-%s-%s:%s:0", ENDPOINT, topic, pnScope, dt.format("hh"));
 		String rowKey2 = String.format("%s-%s-%s:%s:z", ENDPOINT, topic, pnScope, dt.format("hh"));
+		switch(datetype) {
+		case "h":
+			rowKey1 = String.format("%s-%s-%s:%s:0", ENDPOINT, topic, pnScope, dt.format("hh"));
+			rowKey2 = String.format("%s-%s-%s:%s:z", ENDPOINT, topic, pnScope, dt.format("hh"));
+			break;
+		case "d":
+			rowKey1 = String.format("%s-%s-%s:0", ENDPOINT, topic, pnScope);
+			rowKey2 = String.format("%s-%s-%s:z", ENDPOINT, topic, pnScope);
+			break;
+		}
 		List<DocEntity> docs = TableUtils.filterDocs(tableName, partitionKey, rowKey1, rowKey2);
 		List<Object> list = transfer(platform, docs);
 		return JSON.toJSONString(list);
