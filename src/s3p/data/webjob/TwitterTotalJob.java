@@ -24,7 +24,7 @@ public class TwitterTotalJob {
 		JobEntity job = TableUtils.readJob(jobName);
 		DateTime start = new DateTime(job.getStart());
 		DateTime end = DateTime.now(TimeZone.getTimeZone("GMT+0"));
-		DateTime cur = new DateTime(job.getLast()).minusDays(1);
+		DateTime cur = new DateTime(job.getLast());
 		while (cur.lteq(end)) {
 			System.out.println(cur);
 			// Hourly
