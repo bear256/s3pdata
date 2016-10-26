@@ -11,7 +11,9 @@ public class GetPNDistribution extends Controller {
 	public void index() {
 		String platform=getPara("platform");
 		String topic = getPara("topic");
-		String json = service.get(platform.toLowerCase(), topic.toUpperCase());
+		long date = getParaToLong("date", 0L);
+		String datetype = getPara("datetype", "w");
+		String json = service.get(platform.toLowerCase(), topic.toUpperCase(), date, datetype);
 		renderJson(json);
 	}
 }

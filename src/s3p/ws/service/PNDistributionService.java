@@ -17,11 +17,27 @@ public class PNDistributionService {
 
 	private static final String ENDPOINT = Endpoint.PNDISTRIBUTION;
 
-	public String get(String platform, String topic) {
+	public String get(String platform, String topic, long date, String datetype) {
 		String tableName = Platform.getWeeklyTableName(platform);
-		String partitionKey = DateTime.now(TimeZone.getTimeZone("GMT+0")).minusDays(1).format("YYYY-MM-DD");
+		DateTime dt = date == 0 ? DateTime.now(TimeZone.getTimeZone("GMT+0")).minusDays(1)
+				: DateTime.forInstant(date * 1000, TimeZone.getTimeZone("GMT+0"));
+		String partitionKey = dt.format("YYYY-MM-DD");
 		String rowKey1 = String.format("%s-%s-%s", ENDPOINT, topic, "ALL");
 		String rowKey2 = String.format("%s-%s-%s", ENDPOINT, topic, "ALL");
+		switch (datetype) {
+		case "d":
+			tableName = Platform.getDailyTableName(platform);
+			rowKey1 = String.format("%s-%s-%s", ENDPOINT, topic, "ALL");
+			rowKey2 = String.format("%s-%s-%s", ENDPOINT, topic, "ALL");
+			break;
+		case "h":
+			tableName = Platform.getHourlyTableName(platform);
+			rowKey1 = String.format("%s-%s-%s:%s", ENDPOINT, topic, "ALL", dt.format("hh"));
+			rowKey2 = String.format("%s-%s-%s:%s", ENDPOINT, topic, "ALL", dt.format("hh"));
+			break;
+		default: // Weekly
+			break;
+		}
 		List<DocEntity> docs = TableUtils.filterDocs(tableName, partitionKey, rowKey1, rowKey2);
 		List<VocInfluence> pndistributions = new ArrayList<>();
 		if (docs != null && !docs.isEmpty()) {

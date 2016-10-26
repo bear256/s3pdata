@@ -12,7 +12,9 @@ public class GetMentionedMostServiceList extends Controller {
 		String platform=getPara("platform");
 		String topic = getPara("topic");
 		String pnScope = getPara("PNScope");
-		String json = service.get(platform.toLowerCase(), topic.toUpperCase(), pnScope.toUpperCase());
+		long date = getParaToLong("date", 0L);
+		String datetype = getPara("datetype", "w");
+		String json = service.get(platform.toLowerCase(), topic.toUpperCase(), pnScope.toUpperCase(), date, datetype);
 		renderJson(json);
 	}
 }

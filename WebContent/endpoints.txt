@@ -1,7 +1,7 @@
 S3P Data Endpoints
-http://s3pdata.azurewebsites.net/GetTopUsers?platform=msdn&topNum=10&topic=azure&PNScope=posi
+http://s3pdata.azurewebsites.net/GetTopUsers?platform=msdn&topNum=10&topic=azure&PNScope=posi[&date=TIMESTAMP&datetype=w|d|h]
 
-http://s3pdata.azurewebsites.net/GetPNDistribution?platform=msdn&topic=azure
+http://s3pdata.azurewebsites.net/GetPNDistribution?platform=msdn&topic=azure[&date=TIMESTAMP&datetype=w|d|h]
 http://s3pdata.azurewebsites.net/GetRegionDistribution?platform=twitter&topic=azure&PNScope=posi&days=7		(Only for twitter)
 
 http://s3pdata.azurewebsites.net/GetDailyInfluence?platform=msdn&topic=azure&PNScope=posi&days=7
@@ -13,12 +13,12 @@ http://s3pdata.azurewebsites.net/GetUserVolSpikes?platform=msdn&topic=azure&PNSc
 http://s3pdata.azurewebsites.net/GetUserRegionVolSpikes?platform=twitter&topic=azure&PNScope=posi&days=7	(Only for twitter)
 http://s3pdata.azurewebsites.net/GetDailyVolSpikes?platform=msdn&topic=azure&PNScope=posi&days=7		!!!
 
-http://s3pdata.azurewebsites.net/GetMentionedMostServiceList?platform=msdn&topic=azure&PNScope=posi
+http://s3pdata.azurewebsites.net/GetMentionedMostServiceList?platform=msdn&topic=azure&PNScope=posi[&date=TIMESTAMP&datetype=w|d|h]
 http://s3pdata.azurewebsites.net/GetMentionedMostServiceListByUserVol?platform=msdn&topic=azure&PNScope=posi
 http://s3pdata.azurewebsites.net/GetKeywordsMentionedMostMapping?platform=msdn&topic=azure&PNScope=posi&days=7
 
 http://s3pdata.azurewebsites.net/GetVoCDetailsByUser?platform=msdn&topic=azure&userId=132456&PNScope=posi&days=7
-http://s3pdata.azurewebsites.net/GetVoCDetailsByDate?platform=msdn&topic=azure&date=132465&PNScope=posi&days=7
+http://s3pdata.azurewebsites.net/GetVoCDetailsByDate?platform=msdn&topic=azure&date=132465&PNScope=posi&days=7[&datetype=h|d]
 http://s3pdata.azurewebsites.net/GetVoCDetailsByPN?platform=msdn&topic=azure&PNScope=posi&days=7
 http://s3pdata.azurewebsites.net/GetVoCDetailsByServiceName?platform=msdn&topic=azure&servicename=Azure Portal&PNScope=posi&days=7
 

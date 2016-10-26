@@ -14,14 +14,30 @@ import s3p.data.utils.TableUtils;
 import s3p.ws.config.Platform;
 
 public class MentionedMostServiceListService {
-	
+
 	private static final String ENDPOINT = Endpoint.MENTIONEDMOSTSERVICELIST;
 
-	public String get(String platform, String topic, String pnScope) {
+	public String get(String platform, String topic, String pnScope, long date, String datetype) {
 		String tableName = Platform.getWeeklyTableName(platform);
-		String partitionKey = DateTime.now(TimeZone.getTimeZone("GMT+0")).minusDays(1).format("YYYY-MM-DD");
+		DateTime dt = date == 0 ? DateTime.now(TimeZone.getTimeZone("GMT+0")).minusDays(1)
+				: DateTime.forInstant(date * 1000, TimeZone.getTimeZone("GMT+0"));
+		String partitionKey = dt.format("YYYY-MM-DD");
 		String rowKey1 = String.format("%s-%s-%s:0", ENDPOINT, topic, pnScope);
 		String rowKey2 = String.format("%s-%s-%s:z", ENDPOINT, topic, pnScope);
+		switch (datetype) {
+		case "d":
+			tableName = Platform.getDailyTableName(platform);
+			rowKey1 = String.format("%s-%s-%s:0", ENDPOINT, topic, pnScope);
+			rowKey2 = String.format("%s-%s-%s:z", ENDPOINT, topic, pnScope);
+			break;
+		case "h":
+			tableName = Platform.getHourlyTableName(platform);
+			rowKey1 = String.format("%s-%s-%s:%s:0", ENDPOINT, topic, pnScope, dt.format("hh"));
+			rowKey2 = String.format("%s-%s-%s:%s:z", ENDPOINT, topic, pnScope, dt.format("hh"));
+			break;
+		default: // Weekly
+			break;
+		}
 		List<DocEntity> docs = TableUtils.filterDocs(tableName, partitionKey, rowKey1, rowKey2);
 		List<MentionedMostService> list = new ArrayList<>();
 		for (DocEntity doc : docs) {
