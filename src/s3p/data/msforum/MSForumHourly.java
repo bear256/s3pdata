@@ -8,6 +8,7 @@ import java.util.Map;
 import com.alibaba.fastjson.JSON;
 
 import hirondelle.date4j.DateTime;
+import s3p.data.config.S3PDataConfig;
 import s3p.data.documentdb.msforum.MSForum;
 import s3p.data.endpoint.common.Sentiment;
 import s3p.data.msforum.hourly.MSForumDailyInfluenceHourly;
@@ -78,36 +79,42 @@ public class MSForumHourly {
 		Map<String, List<MSForum>> topics = groupByTopic(docs);
 		for (String topic : topics.keySet()) {
 			List<MSForum> listByTopic = topics.get(topic);
-			// PNDistribution
-			new MSForumPNDistributionHourly().totalVocinfluence(listByTopic).save(hourly, cur, topic);
-			// DailyVolSpike
-			new MSForumDailyVolSpikeHourly().total(listByTopic).save(hourly, cur, topic);
+//			// PNDistribution
+//			new MSForumPNDistributionHourly().totalVocinfluence(listByTopic).save(hourly, cur, topic);
+//			// DailyVolSpike
+//			new MSForumDailyVolSpikeHourly().total(listByTopic).save(hourly, cur, topic);
 			Map<String, List<MSForum>> pns = groupByPN(listByTopic);
 			for (String pn : pns.keySet()) {
 				List<MSForum> listByPN = pns.get(pn);
-				// TopUser
-				new MSForumTopUserHourly().groupByUserId(listByPN).save(hourly, cur, topic, pn);
-				// RegionDistribution
-				// DailyInfluence
-				new MSForumDailyInfluenceHourly().totalVocinfluence(listByPN).save(hourly, cur, topic, pn);
-				// MessageVolSpike
-				new MSForumMessageVolSpikeHourly().total(listByPN).save(hourly, cur, topic, pn);
-				// InfluenceVolSpike
-				new MSForumInfluenceVolSpikeHourly().total(listByPN).save(hourly, cur, topic, pn);
-				// UserVolSpike
-				new MSForumUserVolSpikeHourly().groupByUserId(listByPN).save(hourly, cur, topic, pn);
-				// UserRegionVolSpike
-				// MentionedMostServiceList
-				new MSForumMentionedMostServiceListHourly().groupByService(listByPN).save(hourly, cur, topic, pn);
-				// MentionedMostServiceListByUserVol
-				new MSForumMentionedMostServiceListByUserVolHourly().groupByService(listByPN).save(hourly, cur, topic,
-						pn);
-				// KeywordsMentionedMostMapping
-				new MSForumKeywordsMentionedMostMappingHourly().groupByKeyword(listByPN).save(hourly, cur, topic, pn);
-				// VoCDetail
+//				// TopUser
+//				new MSForumTopUserHourly().groupByUserId(listByPN).save(hourly, cur, topic, pn);
+//				// RegionDistribution
+//				// DailyInfluence
+//				new MSForumDailyInfluenceHourly().totalVocinfluence(listByPN).save(hourly, cur, topic, pn);
+//				// MessageVolSpike
+//				new MSForumMessageVolSpikeHourly().total(listByPN).save(hourly, cur, topic, pn);
+//				// InfluenceVolSpike
+//				new MSForumInfluenceVolSpikeHourly().total(listByPN).save(hourly, cur, topic, pn);
+//				// UserVolSpike
+//				new MSForumUserVolSpikeHourly().groupByUserId(listByPN).save(hourly, cur, topic, pn);
+//				// UserRegionVolSpike
+//				// MentionedMostServiceList
+//				new MSForumMentionedMostServiceListHourly().groupByService(listByPN).save(hourly, cur, topic, pn);
+//				// MentionedMostServiceListByUserVol
+//				new MSForumMentionedMostServiceListByUserVolHourly().groupByService(listByPN).save(hourly, cur, topic,
+//						pn);
+//				// KeywordsMentionedMostMapping
+//				new MSForumKeywordsMentionedMostMappingHourly().groupByKeyword(listByPN).save(hourly, cur, topic, pn);
+//				// VoCDetail
 				new MSForumVoCDetailHourly().save(hourly, cur, topic, pn, listByPN);
 			}
 		}
+	}
+	
+	public static void main(String[] args) {
+		S3PDataConfig config = new S3PDataConfig();
+		TableUtils.init(config);
+		run("MSDNRaw", new DateTime("2016-10-26 06:00:00"), "MSDNHourly");
 	}
 
 }

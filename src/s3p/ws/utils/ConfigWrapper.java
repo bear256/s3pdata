@@ -19,7 +19,7 @@ public class ConfigWrapper {
 	
 	public static void main(String[] args) {
 		System.out.println(DateTime.forInstant(1471230900L*1000, TimeZone.getTimeZone("GMT+0")));
-		System.out.println(DateTime.forInstant(1475596800L*1000, TimeZone.getTimeZone("GMT+0")));
+		System.out.println(DateTime.forInstant(1476979200L*1000, TimeZone.getTimeZone("GMT+0")));
 		System.out.println(new DateTime("2016-01-01").getMilliseconds(TimeZone.getTimeZone("GMT+0")));
 //		DateTime now = DateTime.now(TimeZone.getTimeZone("GMT+0"));
 //		System.out.println("NOW: "+now);
