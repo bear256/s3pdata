@@ -311,10 +311,12 @@ public class MSForum {
 	}
 
 	public String topic() {
-		String topic = "Unknown";
-		if (ServiceNameUtils.match4MSForum("Azure", forum.getDisplayName()).size() > 0) {
-			topic = "Azure";
-		}
+		// String topic = "Unknown";
+		// if (ServiceNameUtils.match4MSForum("Azure",
+		// forum.getDisplayName()).size() > 0) {
+		// topic = "Azure";
+		// }
+		String topic = "Azure";
 		return topic;
 	}
 

@@ -1,18 +1,24 @@
 package s3p.data.endpoint.mentionedmost;
 
 import s3p.data.endpoint.common.VocInfluence;
+import s3p.data.endpoint.common.attachedobject.MentionedMostServiceAttachedObject;
 
 public class MentionedMostServiceTrend {
 
-	private String attachedobject;
-	private long timeslot;
+	private MentionedMostServiceAttachedObject attachedobject;
 	private VocInfluence vocinfluence;
 
 	public MentionedMostServiceTrend() {
 		super();
 	}
+	
+	public MentionedMostServiceTrend(MentionedMostService mentionedMostService, long timeslot) {
+		super();
+		this.attachedobject = new MentionedMostServiceAttachedObject(mentionedMostService.getAttachedobject(), timeslot);
+		this.vocinfluence = mentionedMostService.getVocinfluence();
+	}
 
-	public MentionedMostServiceTrend(String attachedobject) {
+	public MentionedMostServiceTrend(MentionedMostServiceAttachedObject attachedobject) {
 		super();
 		this.attachedobject = attachedobject;
 		this.vocinfluence = new VocInfluence();
@@ -22,20 +28,12 @@ public class MentionedMostServiceTrend {
 		vocinfluence.incVocInfluence(sentiment, influenceCount);
 	}
 
-	public String getAttachedobject() {
+	public MentionedMostServiceAttachedObject getAttachedobject() {
 		return attachedobject;
 	}
 
-	public void setAttachedobject(String attachedobject) {
+	public void setAttachedobject(MentionedMostServiceAttachedObject attachedobject) {
 		this.attachedobject = attachedobject;
-	}
-
-	public long getTimeslot() {
-		return timeslot;
-	}
-
-	public void setTimeslot(long timeslot) {
-		this.timeslot = timeslot;
 	}
 
 	public VocInfluence getVocinfluence() {

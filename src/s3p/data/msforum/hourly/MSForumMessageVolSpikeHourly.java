@@ -20,10 +20,12 @@ public class MSForumMessageVolSpikeHourly {
 
 	public MSForumMessageVolSpikeHourly total(List<MSForum> listByPN) {
 		for (MSForum msForum : listByPN) {
+			System.out.println("MsgId: "+msForum.getId());
 			int sentiment = msForum.getSentimentscore();
 			int influenceCount = msForum.getViews();
 			messageVolSpike.incVocInfluence(sentiment, influenceCount);
 		}
+		System.out.println(messageVolSpike.getVocinfluence().getVoctotalvol());
 		return this;
 	}
 
@@ -35,5 +37,6 @@ public class MSForumMessageVolSpikeHourly {
 		String json = JSON.toJSONString(messageVolSpike);
 		DocEntity entity = new DocEntity(partitionKey, rowKey, json);
 		TableUtils.writeEntity(tableName, entity);
+		System.out.println(dt+"\t"+timeslot+"\t"+messageVolSpike.getVocinfluence().getVoctotalvol());
 	}
 }

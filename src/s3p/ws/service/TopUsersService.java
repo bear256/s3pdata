@@ -22,13 +22,14 @@ public class TopUsersService {
 
 	private static final String ENDPOINT = Endpoint.TOPUSER;
 
-	public String get(String platform, int topNum, String topic, String pnScope, long date, String datetype) {
+	public String get(String platform, int topNum, String topic, String pnScope, long date, String datetype,
+			int index) {
 		String tableName = Platform.getWeeklyTableName(platform);
 		DateTime dt = date == 0 ? DateTime.now(TimeZone.getTimeZone("GMT+0")).minusDays(1)
 				: DateTime.forInstant(date * 1000, TimeZone.getTimeZone("GMT+0"));
 		String partitionKey = dt.format("YYYY-MM-DD");
-		String rowKey1 = String.format("%s-%s-%s:0", ENDPOINT, topic, pnScope);
-		String rowKey2 = String.format("%s-%s-%s:%09d", ENDPOINT, topic, pnScope, topNum - 1);
+		String rowKey1 = String.format("%s-%s-%s:%09d", ENDPOINT, topic, pnScope, index == -1 ? 0 : index);
+		String rowKey2 = String.format("%s-%s-%s:%09d", ENDPOINT, topic, pnScope, index == -1 ? topNum - 1 : index);
 		switch (datetype) {
 		case "d":
 			tableName = Platform.getDailyTableName(platform);
@@ -47,137 +48,140 @@ public class TopUsersService {
 		String json = null;
 		switch (platform) {
 		case Platform.Twitter:
-			json = twitter(docs, pnScope, topNum);
+			json = twitter(docs, pnScope, topNum, datetype);
 			break;
 		case Platform.MSDN:
 		case Platform.TechNet:
-			json = msforum(docs, pnScope, topNum);
+			json = msforum(docs, pnScope, topNum, datetype);
 			break;
 		case Platform.ServerFault:
 		case Platform.StackOverflow:
 		case Platform.SuperUser:
-			json = stackforum(docs, pnScope, topNum);
+			json = stackforum(docs, pnScope, topNum, datetype);
 			break;
 		}
 		return json;
 	}
 
-	private String twitter(List<DocEntity> docs, String pn, int topNum) {
+	private String twitter(List<DocEntity> docs, String pn, int topNum, String datetype) {
 		List<TwitterTopUser> topUsers = new ArrayList<>();
 		for (DocEntity doc : docs) {
 			topUsers.add(JSON.parseObject(doc.getJson(), TwitterTopUser.class));
 		}
-		Collections.sort(topUsers, new Comparator<TwitterTopUser>() {
+		if (!"w".equals(datetype))
+			Collections.sort(topUsers, new Comparator<TwitterTopUser>() {
 
-			@Override
-			public int compare(TwitterTopUser o1, TwitterTopUser o2) {
-				int order = 0;
-				switch (pn) {
-				case Sentiment.UNDEF:
-					order = o1.getVocinfluence().getUndefinedtotalvol() < o2.getVocinfluence().getUndefinedtotalvol() ? 1
-							: -1;
-					break;
-				case Sentiment.NEG:
-					order = o1.getVocinfluence().getNegativetotalvol() < o2.getVocinfluence().getNegativetotalvol() ? 1
-							: -1;
-					break;
-				case Sentiment.NEU:
-					order = o1.getVocinfluence().getNeutraltotalvol() < o2.getVocinfluence().getNeutraltotalvol() ? 1
-							: -1;
-					break;
-				case Sentiment.POSI:
-					order = o1.getVocinfluence().getPositivetotalvol() < o2.getVocinfluence().getPositivetotalvol() ? 1
-							: -1;
-					break;
-				default:
-					order = o1.getVocinfluence().getVoctotalvol() < o2.getVocinfluence().getVoctotalvol() ? 1 : -1;
-					break;
+				@Override
+				public int compare(TwitterTopUser o1, TwitterTopUser o2) {
+					int order = 0;
+					switch (pn) {
+					case Sentiment.UNDEF:
+						order = o1.getVocinfluence().getUndefinedtotalvol() < o2.getVocinfluence()
+								.getUndefinedtotalvol() ? 1 : -1;
+						break;
+					case Sentiment.NEG:
+						order = o1.getVocinfluence().getNegativetotalvol() < o2.getVocinfluence().getNegativetotalvol()
+								? 1 : -1;
+						break;
+					case Sentiment.NEU:
+						order = o1.getVocinfluence().getNeutraltotalvol() < o2.getVocinfluence().getNeutraltotalvol()
+								? 1 : -1;
+						break;
+					case Sentiment.POSI:
+						order = o1.getVocinfluence().getPositivetotalvol() < o2.getVocinfluence().getPositivetotalvol()
+								? 1 : -1;
+						break;
+					default:
+						order = o1.getVocinfluence().getVoctotalvol() < o2.getVocinfluence().getVoctotalvol() ? 1 : -1;
+						break;
+					}
+					return order;
 				}
-				return order;
-			}
-		});
+			});
 		return JSON.toJSONString(take(topUsers, topNum));
 	}
 
-	private String msforum(List<DocEntity> docs, String pn, int topNum) {
+	private String msforum(List<DocEntity> docs, String pn, int topNum, String datetype) {
 		List<MSForumTopUser> topUsers = new ArrayList<>();
 		for (DocEntity doc : docs) {
 			topUsers.add(JSON.parseObject(doc.getJson(), MSForumTopUser.class));
 		}
-		Collections.sort(topUsers, new Comparator<MSForumTopUser>() {
+		if (!"w".equals(datetype))
+			Collections.sort(topUsers, new Comparator<MSForumTopUser>() {
 
-			@Override
-			public int compare(MSForumTopUser o1, MSForumTopUser o2) {
-				int order = 0;
-				switch (pn) {
-				case Sentiment.UNDEF:
-					order = o1.getVocinfluence().getUndefinedtotalvol() < o2.getVocinfluence().getUndefinedtotalvol() ? 1
-							: -1;
-					break;
-				case Sentiment.NEG:
-					order = o1.getVocinfluence().getNegativetotalvol() < o2.getVocinfluence().getNegativetotalvol() ? 1
-							: -1;
-					break;
-				case Sentiment.NEU:
-					order = o1.getVocinfluence().getNeutraltotalvol() < o2.getVocinfluence().getNeutraltotalvol() ? 1
-							: -1;
-					break;
-				case Sentiment.POSI:
-					order = o1.getVocinfluence().getPositivetotalvol() < o2.getVocinfluence().getPositivetotalvol() ? 1
-							: -1;
-					break;
-				default:
-					order = o1.getVocinfluence().getVoctotalvol() < o2.getVocinfluence().getVoctotalvol() ? 1 : -1;
-					break;
+				@Override
+				public int compare(MSForumTopUser o1, MSForumTopUser o2) {
+					int order = 0;
+					switch (pn) {
+					case Sentiment.UNDEF:
+						order = o1.getVocinfluence().getUndefinedtotalvol() < o2.getVocinfluence()
+								.getUndefinedtotalvol() ? 1 : -1;
+						break;
+					case Sentiment.NEG:
+						order = o1.getVocinfluence().getNegativetotalvol() < o2.getVocinfluence().getNegativetotalvol()
+								? 1 : -1;
+						break;
+					case Sentiment.NEU:
+						order = o1.getVocinfluence().getNeutraltotalvol() < o2.getVocinfluence().getNeutraltotalvol()
+								? 1 : -1;
+						break;
+					case Sentiment.POSI:
+						order = o1.getVocinfluence().getPositivetotalvol() < o2.getVocinfluence().getPositivetotalvol()
+								? 1 : -1;
+						break;
+					default:
+						order = o1.getVocinfluence().getVoctotalvol() < o2.getVocinfluence().getVoctotalvol() ? 1 : -1;
+						break;
+					}
+					return order;
 				}
-				return order;
-			}
-		});
+			});
 		return JSON.toJSONString(take(topUsers, topNum));
 	}
-	
-	private String stackforum(List<DocEntity> docs, String pn, int topNum) {
+
+	private String stackforum(List<DocEntity> docs, String pn, int topNum, String datetype) {
 		List<StackForumTopUser> topUsers = new ArrayList<>();
 		for (DocEntity doc : docs) {
 			topUsers.add(JSON.parseObject(doc.getJson(), StackForumTopUser.class));
 		}
-		Collections.sort(topUsers, new Comparator<StackForumTopUser>() {
+		if (!"w".equals(datetype))
+			Collections.sort(topUsers, new Comparator<StackForumTopUser>() {
 
-			@Override
-			public int compare(StackForumTopUser o1, StackForumTopUser o2) {
-				int order = 0;
-				switch (pn) {
-				case Sentiment.UNDEF:
-					order = o1.getVocinfluence().getUndefinedtotalvol() < o2.getVocinfluence().getUndefinedtotalvol() ? 1
-							: -1;
-					break;
-				case Sentiment.NEG:
-					order = o1.getVocinfluence().getNegativetotalvol() < o2.getVocinfluence().getNegativetotalvol() ? 1
-							: -1;
-					break;
-				case Sentiment.NEU:
-					order = o1.getVocinfluence().getNeutraltotalvol() < o2.getVocinfluence().getNeutraltotalvol() ? 1
-							: -1;
-					break;
-				case Sentiment.POSI:
-					order = o1.getVocinfluence().getPositivetotalvol() < o2.getVocinfluence().getPositivetotalvol() ? 1
-							: -1;
-					break;
-				default:
-					order = o1.getVocinfluence().getVoctotalvol() < o2.getVocinfluence().getVoctotalvol() ? 1 : -1;
-					break;
+				@Override
+				public int compare(StackForumTopUser o1, StackForumTopUser o2) {
+					int order = 0;
+					switch (pn) {
+					case Sentiment.UNDEF:
+						order = o1.getVocinfluence().getUndefinedtotalvol() < o2.getVocinfluence()
+								.getUndefinedtotalvol() ? 1 : -1;
+						break;
+					case Sentiment.NEG:
+						order = o1.getVocinfluence().getNegativetotalvol() < o2.getVocinfluence().getNegativetotalvol()
+								? 1 : -1;
+						break;
+					case Sentiment.NEU:
+						order = o1.getVocinfluence().getNeutraltotalvol() < o2.getVocinfluence().getNeutraltotalvol()
+								? 1 : -1;
+						break;
+					case Sentiment.POSI:
+						order = o1.getVocinfluence().getPositivetotalvol() < o2.getVocinfluence().getPositivetotalvol()
+								? 1 : -1;
+						break;
+					default:
+						order = o1.getVocinfluence().getVoctotalvol() < o2.getVocinfluence().getVoctotalvol() ? 1 : -1;
+						break;
+					}
+					return order;
 				}
-				return order;
-			}
-		});
+			});
 		return JSON.toJSONString(take(topUsers, topNum));
 	}
-	
+
 	private <T> List<T> take(List<T> list, int topNum) {
 		List<T> objs = new ArrayList<>();
 		int num = 0;
-		for(T obj: list) {
-			if(num < topNum) {
+		for (T obj : list) {
+			if (num < topNum) {
 				objs.add(obj);
 				num++;
 			}

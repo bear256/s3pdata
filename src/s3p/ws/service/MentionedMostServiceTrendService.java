@@ -9,6 +9,7 @@ import com.alibaba.fastjson.JSON;
 import hirondelle.date4j.DateTime;
 import hirondelle.date4j.DateTime.DayOverflow;
 import s3p.data.endpoint.common.Endpoint;
+import s3p.data.endpoint.mentionedmost.MentionedMostService;
 import s3p.data.endpoint.mentionedmost.MentionedMostServiceTrend;
 import s3p.data.storage.table.DocEntity;
 import s3p.data.utils.TableUtils;
@@ -32,11 +33,10 @@ public class MentionedMostServiceTrendService {
 					"".equals(serviceName) ? "z" : serviceName);
 			List<DocEntity> docs = TableUtils.filterDocs(tableName, partitionKey, rowKey1, rowKey2);
 			for (DocEntity doc : docs) {
-				MentionedMostServiceTrend trend = JSON.parseObject(doc.getJson(), MentionedMostServiceTrend.class);
+				MentionedMostService mentionedMostService = JSON.parseObject(doc.getJson(), MentionedMostService.class);
 				long timeslot = new DateTime(doc.getPartitionKey() + " " + doc.getRowKey().split(":")[1] + ":00:00")
 						.getMilliseconds(TimeZone.getTimeZone("GMT+0")) / 1000;
-				trend.setTimeslot(timeslot);
-				list.add(trend);
+				list.add(new MentionedMostServiceTrend(mentionedMostService, timeslot));
 			}
 		}
 		return JSON.toJSONString(list);

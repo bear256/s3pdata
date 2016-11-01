@@ -15,7 +15,8 @@ public class GetTopUsers extends Controller {
 		String pnScope = getPara("PNScope");
 		long date = getParaToLong("date", 0L);
 		String datetype = getPara("datetype", "w");
-		String json = service.get(platform.toLowerCase(), topNum, topic.toUpperCase(), pnScope.toUpperCase(), date, datetype);
+		int index = getParaToInt("index", -1);
+		String json = service.get(platform.toLowerCase(), topNum, topic.toUpperCase(), pnScope.toUpperCase(), date, datetype, index);
 		renderJson(json);
 	}
 }
