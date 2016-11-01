@@ -21,6 +21,7 @@ import s3p.ws.controller.GetInfluenceVolSpikes;
 import s3p.ws.controller.GetKeywordsMentionedMostMapping;
 import s3p.ws.controller.GetMentionedMostServiceList;
 import s3p.ws.controller.GetMentionedMostServiceListByUserVol;
+import s3p.ws.controller.GetMentionedMostServiceTrend;
 import s3p.ws.controller.GetMessageVolSpikes;
 import s3p.ws.controller.GetPNDistribution;
 import s3p.ws.controller.GetRegionDistribution;
@@ -74,6 +75,7 @@ public class S3PWSConfig extends JFinalConfig {
 		me.add("/GetUserRegionVolSpikes", GetUserRegionVolSpikes.class);
 		me.add("/GetDailyVolSpikes", GetDailyVolSpikes.class);
 		me.add("/GetMentionedMostServiceList", GetMentionedMostServiceList.class);
+		me.add("/GetMentionedMostServiceTrend", GetMentionedMostServiceTrend.class);
 		me.add("/GetMentionedMostServiceListByUserVol", GetMentionedMostServiceListByUserVol.class);
 		me.add("/GetKeywordsMentionedMostMapping", GetKeywordsMentionedMostMapping.class);
 		me.add("/GetVoCDetailsByUser", GetVoCDetailsByUser.class);
