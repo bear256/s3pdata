@@ -23,7 +23,7 @@ public class MentionedMostServiceTrendService {
 		String tableName = Platform.getHourlyTableName(platform);
 		DateTime now = new DateTime(DateTime.now(TimeZone.getTimeZone("GMT+0")).format("YYYY-MM-DD 00:00:00"));
 		DateTime start = now.minusDays(7);
-		DateTime end = now.minusDays(1);
+		DateTime end = now.minusDays(1).plus(0, 0, 0, 23, 0, 0, 0, DayOverflow.Abort);
 		List<MentionedMostServiceTrend> list = new ArrayList<>();
 		for (DateTime cur = start; cur.lteq(end); cur = cur.plus(0, 0, 0, 1, 0, 0, 0, DayOverflow.Abort)) {
 			String partitionKey = cur.format("YYYY-MM-DD");
