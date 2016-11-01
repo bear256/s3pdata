@@ -22,6 +22,8 @@ public class TwitterTopUserWeekly implements Weekly {
 
 	private List<TwitterTopUser> list = new ArrayList<>();
 
+	private Map<String, TwitterTopUser> map = new HashMap<>();
+
 	public static void run(String endpoint, List<DocEntity> listByPN, String tableName, DateTime dt, String topic,
 			String pn) {
 		if (ENDPOINT.equals(endpoint)) {
@@ -30,7 +32,6 @@ public class TwitterTopUserWeekly implements Weekly {
 	}
 
 	public TwitterTopUserWeekly merge(List<DocEntity> listByPN) {
-		Map<String, TwitterTopUser> map = new HashMap<>();
 		for (DocEntity doc : listByPN) {
 			String json = doc.getJson();
 			TwitterTopUser topUser = JSON.parseObject(json, TwitterTopUser.class);
@@ -53,8 +54,8 @@ public class TwitterTopUserWeekly implements Weekly {
 				int order = 0;
 				switch (pn) {
 				case Sentiment.UNDEF:
-					order = o1.getVocinfluence().getUndefinedtotalvol() < o2.getVocinfluence().getUndefinedtotalvol() ? 1
-							: -1;
+					order = o1.getVocinfluence().getUndefinedtotalvol() < o2.getVocinfluence().getUndefinedtotalvol()
+							? 1 : -1;
 					break;
 				case Sentiment.NEG:
 					order = o1.getVocinfluence().getNegativetotalvol() < o2.getVocinfluence().getNegativetotalvol() ? 1
