@@ -76,23 +76,33 @@ public class TopUsersService {
 					int order = 0;
 					switch (pn) {
 					case Sentiment.UNDEF:
-						order = o1.getVocinfluence().getUndefinedtotalvol() < o2.getVocinfluence()
-								.getUndefinedtotalvol() ? 1 : -1;
+						order = o1.getVocinfluence().getUndefinedtotalvol()
+								.equals(o2.getVocinfluence().getUndefinedtotalvol()) ? 0
+										: o1.getVocinfluence().getUndefinedtotalvol() < o2.getVocinfluence()
+												.getUndefinedtotalvol() ? 1 : -1;
 						break;
 					case Sentiment.NEG:
-						order = o1.getVocinfluence().getNegativetotalvol() < o2.getVocinfluence().getNegativetotalvol()
-								? 1 : -1;
+						order = o1.getVocinfluence().getNegativetotalvol()
+								.equals(o2.getVocinfluence().getNegativetotalvol()) ? 0
+										: o1.getVocinfluence().getNegativetotalvol() < o2.getVocinfluence()
+												.getNegativetotalvol() ? 1 : -1;
 						break;
 					case Sentiment.NEU:
-						order = o1.getVocinfluence().getNeutraltotalvol() < o2.getVocinfluence().getNeutraltotalvol()
-								? 1 : -1;
+						order = o1.getVocinfluence().getNeutraltotalvol()
+								.equals(o2.getVocinfluence().getNeutraltotalvol()) ? 0
+										: o1.getVocinfluence().getNeutraltotalvol() < o2.getVocinfluence()
+												.getNeutraltotalvol() ? 1 : -1;
 						break;
 					case Sentiment.POSI:
-						order = o1.getVocinfluence().getPositivetotalvol() < o2.getVocinfluence().getPositivetotalvol()
-								? 1 : -1;
+						order = o1.getVocinfluence().getPositivetotalvol()
+								.equals(o2.getVocinfluence().getPositivetotalvol()) ? 0
+										: o1.getVocinfluence().getPositivetotalvol() < o2.getVocinfluence()
+												.getPositivetotalvol() ? 1 : -1;
 						break;
 					default:
-						order = o1.getVocinfluence().getVoctotalvol() < o2.getVocinfluence().getVoctotalvol() ? 1 : -1;
+						order = o1.getVocinfluence().getVoctotalvol().equals(o2.getVocinfluence().getVoctotalvol()) ? 0
+								: o1.getVocinfluence().getVoctotalvol() < o2.getVocinfluence().getVoctotalvol() ? 1
+										: -1;
 						break;
 					}
 					return order;
@@ -114,23 +124,33 @@ public class TopUsersService {
 					int order = 0;
 					switch (pn) {
 					case Sentiment.UNDEF:
-						order = o1.getVocinfluence().getUndefinedtotalvol() < o2.getVocinfluence()
-								.getUndefinedtotalvol() ? 1 : -1;
+						order = o1.getVocinfluence().getUndefinedtotalvol()
+								.equals(o2.getVocinfluence().getUndefinedtotalvol()) ? 0
+										: o1.getVocinfluence().getUndefinedtotalvol() < o2.getVocinfluence()
+												.getUndefinedtotalvol() ? 1 : -1;
 						break;
 					case Sentiment.NEG:
-						order = o1.getVocinfluence().getNegativetotalvol() < o2.getVocinfluence().getNegativetotalvol()
-								? 1 : -1;
+						order = o1.getVocinfluence().getNegativetotalvol()
+								.equals(o2.getVocinfluence().getNegativetotalvol()) ? 0
+										: o1.getVocinfluence().getNegativetotalvol() < o2.getVocinfluence()
+												.getNegativetotalvol() ? 1 : -1;
 						break;
 					case Sentiment.NEU:
-						order = o1.getVocinfluence().getNeutraltotalvol() < o2.getVocinfluence().getNeutraltotalvol()
-								? 1 : -1;
+						order = o1.getVocinfluence().getNeutraltotalvol()
+								.equals(o2.getVocinfluence().getNeutraltotalvol()) ? 0
+										: o1.getVocinfluence().getNeutraltotalvol() < o2.getVocinfluence()
+												.getNeutraltotalvol() ? 1 : -1;
 						break;
 					case Sentiment.POSI:
-						order = o1.getVocinfluence().getPositivetotalvol() < o2.getVocinfluence().getPositivetotalvol()
-								? 1 : -1;
+						order = o1.getVocinfluence().getPositivetotalvol()
+								.equals(o2.getVocinfluence().getPositivetotalvol()) ? 0
+										: o1.getVocinfluence().getPositivetotalvol() < o2.getVocinfluence()
+												.getPositivetotalvol() ? 1 : -1;
 						break;
 					default:
-						order = o1.getVocinfluence().getVoctotalvol() < o2.getVocinfluence().getVoctotalvol() ? 1 : -1;
+						order = o1.getVocinfluence().getVoctotalvol().equals(o2.getVocinfluence().getVoctotalvol()) ? 0
+								: o1.getVocinfluence().getVoctotalvol() < o2.getVocinfluence().getVoctotalvol() ? 1
+										: -1;
 						break;
 					}
 					return order;
@@ -152,23 +172,33 @@ public class TopUsersService {
 					int order = 0;
 					switch (pn) {
 					case Sentiment.UNDEF:
-						order = o1.getVocinfluence().getUndefinedtotalvol() < o2.getVocinfluence()
-								.getUndefinedtotalvol() ? 1 : -1;
+						order = o1.getVocinfluence().getUndefinedtotalvol()
+								.equals(o2.getVocinfluence().getUndefinedtotalvol()) ? 0
+										: o1.getVocinfluence().getUndefinedtotalvol() < o2.getVocinfluence()
+												.getUndefinedtotalvol() ? 1 : -1;
 						break;
 					case Sentiment.NEG:
-						order = o1.getVocinfluence().getNegativetotalvol() < o2.getVocinfluence().getNegativetotalvol()
-								? 1 : -1;
+						order = o1.getVocinfluence().getNegativetotalvol()
+								.equals(o2.getVocinfluence().getNegativetotalvol()) ? 0
+										: o1.getVocinfluence().getNegativetotalvol() < o2.getVocinfluence()
+												.getNegativetotalvol() ? 1 : -1;
 						break;
 					case Sentiment.NEU:
-						order = o1.getVocinfluence().getNeutraltotalvol() < o2.getVocinfluence().getNeutraltotalvol()
-								? 1 : -1;
+						order = o1.getVocinfluence().getNeutraltotalvol()
+								.equals(o2.getVocinfluence().getNeutraltotalvol()) ? 0
+										: o1.getVocinfluence().getNeutraltotalvol() < o2.getVocinfluence()
+												.getNeutraltotalvol() ? 1 : -1;
 						break;
 					case Sentiment.POSI:
-						order = o1.getVocinfluence().getPositivetotalvol() < o2.getVocinfluence().getPositivetotalvol()
-								? 1 : -1;
+						order = o1.getVocinfluence().getPositivetotalvol()
+								.equals(o2.getVocinfluence().getPositivetotalvol()) ? 0
+										: o1.getVocinfluence().getPositivetotalvol() < o2.getVocinfluence()
+												.getPositivetotalvol() ? 1 : -1;
 						break;
 					default:
-						order = o1.getVocinfluence().getVoctotalvol() < o2.getVocinfluence().getVoctotalvol() ? 1 : -1;
+						order = o1.getVocinfluence().getVoctotalvol().equals(o2.getVocinfluence().getVoctotalvol()) ? 0
+								: o1.getVocinfluence().getVoctotalvol() < o2.getVocinfluence().getVoctotalvol() ? 1
+										: -1;
 						break;
 					}
 					return order;

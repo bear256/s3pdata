@@ -46,6 +46,7 @@ public class S3PWSConfig extends JFinalConfig {
 		S3PDataConfig config = new S3PDataConfig();
 		ConfigWrapper.init(config);
 		TableUtils.init(config);
+		System.setProperty("java.util.Arrays.useLegacyMergeSort", "true"); 
 	}
 
 	@Override

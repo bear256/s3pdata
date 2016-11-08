@@ -80,12 +80,12 @@ public class ImpactSummaryService {
 			map.put("vocinsights", impactSummary.getVocinsights());
 			map.put("mostnegfrom", impactSummary.getMostnegfrom());
 			map.put("mostposifrom", impactSummary.getMostposifrom());
-		} else{
+		} else {
 			impactSummary = new ImpactSummary();
 		}
 		return JSON.toJSONString(map);
 	}
-	
+
 	private MostMentionedService[] genMostMentionedServices(String platform, String topic, DateTime dt) {
 		String tableName = Platform.getWeeklyTableName(platform);
 		List<DocEntity> docs = TableUtils.filterDocs(tableName, dt.format("YYYY-MM-DD"),
@@ -104,14 +104,17 @@ public class ImpactSummaryService {
 			@Override
 			public int compare(MentionedMostService o1, MentionedMostService o2) {
 				// TODO Auto-generated method stub
-				return o1.getVocinfluence().getVoctotalvol() < o2.getVocinfluence().getVoctotalvol() ? 1 : -1;
+				return o1.getVocinfluence().getVoctotalvol().equals(o2.getVocinfluence().getVoctotalvol()) ? 0
+						: o1.getVocinfluence().getVoctotalvol() < o2.getVocinfluence().getVoctotalvol() ? 1 : -1;
+				// return
+				// -o1.getVocinfluence().getVoctotalvol().compareTo(o2.getVocinfluence().getVoctotalvol());
 			}
 		});
 		MostMentionedService[] list = new MostMentionedService[3];
 		for (int i = 0; i < alls.size() && i < 3; i++) {
 			MentionedMostService all = alls.get(i);
 			int occupyratio = all.getVocinfluence().getVoctotalvol() * 100 / (total != 0 ? total : 1);
-			System.out.println(all.getVocinfluence().getVoctotalvol()+"\t"+total);
+			System.out.println(all.getVocinfluence().getVoctotalvol() + "\t" + total);
 			list[i] = new MostMentionedService(all, occupyratio);
 		}
 		for (MostMentionedService service : list) {
@@ -130,7 +133,7 @@ public class ImpactSummaryService {
 		}
 		return list;
 	}
-	
+
 	private MostMentionedService[] genGrowthRanking(String platform, String topic, DateTime dt) {
 		String tableName = Platform.getWeeklyTableName(platform);
 		List<DocEntity> docs = TableUtils.filterDocs(tableName, dt.format("YYYY-MM-DD"),
@@ -145,7 +148,7 @@ public class ImpactSummaryService {
 			alls.add(all);
 		}
 		List<MostMentionedService> list = new ArrayList<>();
-		for (MentionedMostService all: alls) {
+		for (MentionedMostService all : alls) {
 			int occupyratio = all.getVocinfluence().getVoctotalvol() * 100 / (total != 0 ? total : 1);
 			MostMentionedService service = new MostMentionedService(all, occupyratio);
 			if (service == null)
@@ -167,9 +170,15 @@ public class ImpactSummaryService {
 			@Override
 			public int compare(MostMentionedService o1, MostMentionedService o2) {
 				// TODO Auto-generated method stub
-				return o1.getMentionedmostservice().getVocinfluence().getVocvolgrowthratio() < o2.getMentionedmostservice().getVocinfluence().getVocvolgrowthratio() ? 1 : -1;
+				return o1.getMentionedmostservice().getVocinfluence()
+						.getVocvolgrowthratio() == o2.getMentionedmostservice().getVocinfluence()
+								.getVocvolgrowthratio()
+										? 0
+										: o1.getMentionedmostservice().getVocinfluence().getVocvolgrowthratio() < o2
+												.getMentionedmostservice().getVocinfluence().getVocvolgrowthratio() ? 1
+														: -1;
 			}
-		});	
+		});
 		MostMentionedService[] services = new MostMentionedService[3];
 		for (int i = 0; i < list.size() && i < 3; i++) {
 			MostMentionedService service = list.get(i);
