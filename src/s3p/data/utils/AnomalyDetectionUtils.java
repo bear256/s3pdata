@@ -21,7 +21,6 @@ import hirondelle.date4j.DateTime;
 import s3p.data.config.S3PDataConfig;
 import s3p.data.endpoint.common.Endpoint;
 import s3p.data.endpoint.volspikes.MessageVolSpike;
-import s3p.data.endpoint.volspikes.UserVolSpike;
 import s3p.data.storage.table.DocEntity;
 import s3p.data.utils.anomalydetection.RequestBody;
 import s3p.ws.config.Platform;
@@ -32,11 +31,13 @@ public class AnomalyDetectionUtils {
 	private static String accountId;
 	private static String accountKey;
 	private static String apiKey;
+	private static String sensitivity;
 
 	public static void init(S3PDataConfig config) {
 		api = config.get("anomalydetection.api");
 		accountId = config.get("anomalydetection.accountId");
 		accountKey = config.get("anomalydetection.accountKey");
+		sensitivity = config.get("anomalydetection.sensitivity");
 		try {
 			apiKey = Base64.encode((accountId + ":" + accountKey).getBytes("UTF-8"));
 		} catch (UnsupportedEncodingException e) {
@@ -70,6 +71,7 @@ public class AnomalyDetectionUtils {
 	}
 
 	public static String request(RequestBody reqBody) {
+		reqBody.setSensitivity(sensitivity);
 		byte[] queryBytes = JSON.toJSONString(reqBody).getBytes();
 		return request(queryBytes);
 	}
@@ -77,7 +79,6 @@ public class AnomalyDetectionUtils {
 	public static List<String> listSpikeTime(RequestBody reqBody) {
 		List<String> spikeTimes = new ArrayList<>();
 		String json = request(reqBody);
-//		System.out.println(json);
 		JSONObject jo = JSON.parseObject(json);
 		JSONObject adOutput = jo.getJSONObject("ADOutput");
 		JSONArray values = adOutput.getJSONArray("Values");
@@ -101,7 +102,6 @@ public class AnomalyDetectionUtils {
 		String endpoint = Endpoint.MESSAGEVOLSPIKE;
 		DateTime now = DateTime.now(TimeZone.getTimeZone("GMT+0"));
 		List<String[]> data = new ArrayList<>();
-		List<String> times = new ArrayList<>();
 		for(DateTime cur = now.minusDays(30); cur.lteq(now); cur = cur.plusDays(1)) {
 			String partitionKey = cur.format("YYYY-MM-DD");
 			String rowKey1 = String.format("%s-0", endpoint);
@@ -120,6 +120,8 @@ public class AnomalyDetectionUtils {
 		}
 		System.out.println(JSON.toJSONString(data));
 		RequestBody requestBody = new RequestBody(data);
-		AnomalyDetectionUtils.listSpikeTime(requestBody);
+		requestBody.setSensitivity(sensitivity);
+		System.out.println(JSON.toJSONString(requestBody));
+//		AnomalyDetectionUtils.listSpikeTime(requestBody);
 	}
 }

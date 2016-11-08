@@ -29,6 +29,11 @@ public class RequestBody {
 		params.put("bileveldetector.sensitivity", "3");
 		params.put("postprocess.tailRows", ""+data.size());
 	}
+	
+	public void setSensitivity(String sensitivity) {
+		params.put("tspikedetector.sensitivity", sensitivity);
+		params.put("zspikedetector.sensitivity", sensitivity);
+	}
 
 	public List<String[]> getData() {
 		return data;
